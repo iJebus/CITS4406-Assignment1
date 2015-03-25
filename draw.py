@@ -1085,7 +1085,7 @@ points = [[7.0, 0.0], [5.01004091562102, -1.4089070457328918],
 
 # Open a graphics window
 
-win = GraphWin('Spyrograph')
+win = GraphWin('Spyrograph', 300, 300)
 
 """
 # Draw a red circle centered at point (100, 100) with radius 30
@@ -1110,7 +1110,7 @@ for i in points:
     # line = Line(previous[0], previous[1]), Point(i[0], i[1])
     # line.draw(win)
     # previous = i[0], i[1]
-    p = Point((i[0] + 25) * 4, (i[1] + 25) * 4)
+    p = Point((i[0] + 10) * 15, (i[1] + 10) * 15)
     p.draw(win)
 """
 # Draw an oval using the Oval object

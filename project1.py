@@ -9,10 +9,27 @@ one circle as it rotates along the inside (or sometimes the outside) of the
 perimeter of another circle.
 
 Description of how the hypotroidchoid was calculated:
-t = 2 * pi
+First, 'prec' variable is created with a value of 360, or the number of degrees
+in a circle.
+
+Then, the radius' of the fixed and the rolling circle are collected from the
+user, along with the distance of the pen from the center of the rolling circle.
+
+Using these values, we can then calculate the total number of revolutions the
+rolling circle will make until the pen begins to repeat the pattern. This is
+multiplied against 'prec' to give us the total number of points that will exist
+on the graph.
+
+Knowing this, we can then run the parametric equations on that range to find
+the coordinates for each point on the graph. It's literally then a matter of
+'joining the dots' to create our image.
 
 Instructions:
+    CLI version:
+        Enter the desired values as prompted. An example of a valid input is
+        "5, 3, 5", without the quotation marks.
 
+        Watch as your graph is displayed.
 
 References:
 http://en.wikipedia.org/wiki/Hypotrochoid
@@ -21,10 +38,10 @@ http://stackoverflow.com/questions/11175131/code-for-greatest-common-divisor-in-
 https://docs.python.org/dev/library/fractions.html#fractions.gcd
 
     There will be bonus marks (up to 10%) available for the following challenges:
-
-    Use varying colour schemes to make the hypotrochoid look more appealing.
-    Allow the user to choose to draw either a hypotrochoid (http://en.wikipedia.org/wiki/Hypotrochoid) or an epitrochoid (http://en.wikipedia.org/wiki/Epitrochoid).
-    Allow the user to set parameters and draw figures using a graphical user interface
+        Use varying colour schemes to make the hypotrochoid look more appealing.
+        Allow the user to choose to draw either a hypotrochoid (http://en.wikipedia.org/wiki/Hypotrochoid) or an epitrochoid (http://en.wikipedia.org/wiki/Epitrochoid).
+        Allow the user to set parameters and draw figures using a graphical user interface
+        sam - try do it with a fragment shader
 
     Your task for this project is to write a Spyrograph (a python simulation of a Spirograph). The program should allow the user to enter the parameters for a Spirograph drawing, and then produce the corresponding picture in a window. The picture created by the Spirograph (a hypotrochoid) depends on three parameters:
 
@@ -66,12 +83,9 @@ https://docs.python.org/dev/library/fractions.html#fractions.gcd
                        (R - r) * sin(t) - (d * sin) * (t * ((R - r) / r))])
     return points
 
-[5.01004091562102, -1.4089070457328918]
-[5.01004091562102, -1.4089070457328918]
-
 """
 
-from graphics import GraphWin
+from graphics import GraphWin, Point
 # from fractions import gcd
 from math import *
 
@@ -80,10 +94,11 @@ def getInputs():  # (10%)
     """This function should prompt the user for the values of the drawing
     parameters, and return these values to the calling program.
     """
-    return input('Please enter the radius of the fixed circle, the radius '
-                 'of the rolling circle and the distance of the pen from '
-                 'the center of the rolling circle.\nFor example, 10 5 5 '
-                 'would be valid input.\n>> ')
+    return list(map(int, input('Please enter the radius of the fixed circle,'
+                               ' the radius of the rolling circle and the '
+                               'distance of the pen from the center of the '
+                               'rolling circle.\nFor example; 5, 3, 5 is a '
+                               'valid input.\n>> ').split(",")))
 
 
 def gcd(x, y):
@@ -99,7 +114,7 @@ def getNumberOfPoints(R, r, prec):  # R, r, prec > 0 (10%)
     prec points. To calculate this, you should write an extra function to
     calculate the greatest common divisor of two numbers.
     """
-    return prec * (r / gcd(R, r))
+    return prec * (r // gcd(R, r))
 
 
 def getPoints(R, r, d, prec):  # R, r, d, prec > 0 (20%)
@@ -112,6 +127,7 @@ def getPoints(R, r, d, prec):  # R, r, d, prec > 0 (20%)
     for t in range(prec):
         points.append([(R - r) * cos(t) + d * cos(((R - r) / r) * t),
                        (R - r) * sin(t) - d * sin(((R - r) / r) * t)])
+    print(max(points))
     return points
 
 
@@ -121,12 +137,15 @@ def draw(points):  # points is a list of pairs of floating point numbers (30%)
     it. Marks will also be awarded for the presentation, so consider the
     background, colours and scaling of the picture.
     """
-    win = GraphWin()
-    pass
+    win = GraphWin('Spyrograph', 300, 300)
+    for i in points:
+        p = Point((i[0] + 10) * 15, (i[1] + 10) * 15)
+        p.draw(win)
+    win.mainloop()
 
 
 def main():  # (10%)
-    """This function should call all the other functions and control the flow
+    """This function should call all the other functions and controls the flow
     of the program. Once the user has drawn the picture, the program should
     give the user the option to continue or quit.
     """
@@ -134,3 +153,7 @@ def main():  # (10%)
     R, r, d = getInputs()
     prec = getNumberOfPoints(R, r, prec)
     points = getPoints(R, r, d, prec)
+    draw(points)
+
+
+main()
