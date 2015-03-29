@@ -8,7 +8,7 @@ different sizes to draw repeating shapes. It works by tracing a point in
 one circle as it rotates along the inside (or sometimes the outside) of the
 perimeter of another circle.
 
-Description of how the hypotroidchoid was calculated:
+Description of how the graph values are calculated:
 First, 'prec' variable is created with a value of 360, or the number of degrees
 in a circle.
 
@@ -21,18 +21,22 @@ multiplied against 'prec' to give us the total number of points that will exist
 on the graph.
 
 Knowing this, we can then run the parametric equations on that range to find
-the coordinates for each point on the graph. It's literally then a matter of
-'joining the dots' to create our image.
+the coordinates for each point on the graph. These equations differ slightly
+depending on whether an Epitrochoid or a Hypotrochoid is being displayed.
+It's literally then a matter of 'joining the dots' to create our image.
+
 
 Instructions:
-    CLI version:
-        Enter the desired values as prompted. An example of a valid input is
-        "5, 3, 5", without the quotation marks.
+    Select the interface type desired (CLI or GUI) and then enter desired
+    values as prompted.
 
-        Watch as your graph is displayed.
+    Watch as your graph is displayed!
+
+    Click your graph to end the program.
 
 References:
 http://en.wikipedia.org/wiki/Hypotrochoid
+http://en.wikipedia.org/wiki/Epitrochoid
 https://www.python.org/dev/peps/pep-0257/
 http://stackoverflow.com/questions/11175131/code-for-greatest-common-divisor-in-python
 https://docs.python.org/dev/library/fractions.html#fractions.gcd
@@ -84,21 +88,56 @@ https://docs.python.org/dev/library/fractions.html#fractions.gcd
     return points
 
 """
-
-from graphics import GraphWin, Point
-# from fractions import gcd
+from random import randint
 from math import *
+
+from graphics import GraphWin, Point, color_rgb, Text, Rectangle, Entry
+
+
+# from fractions import gcd
+
+
+def get_input_method():
+    """This function prompts the user as to whether they want to draw a GUI or
+    the CLI. The function will loop until valid input is achieved.
+    """
+    types = ['CLI', 'GUI']
+    while True:
+        selection = input('Would you prefer a CLI or GUI?\n>> ')
+        if selection in types:
+            print('{} selected.'.format(selection))
+            return selection
+        else:
+            print('You didn\'t correctly select :( '
+                  'Please type either CLI or GUI when prompted.')
+
+
+def get_type():
+    """This function prompts the user as to whether they want to draw an
+    Epitrochoid or a Hypotrochoid. The function will loop until valid input is
+    achieved.
+    """
+    types = ['Epitrochoid', 'Hypotrochoid']
+    while True:
+        selection = input('Please tell me if you\'d like to draw an '
+                          'Epitrochoid or a Hypotrochoid.\n>> ')
+        if selection in types:
+            print('{} selected'.format(selection))
+            return selection
+        else:
+            print('You didn\'t correctly select :( Please write either '
+                  'Epitrochoid or Hypotrochoid when prompted.')
 
 
 def getInputs():  # (10%)
     """This function should prompt the user for the values of the drawing
     parameters, and return these values to the calling program.
     """
-    return list(map(int, input('Please enter the radius of the fixed circle,'
-                               ' the radius of the rolling circle and the '
-                               'distance of the pen from the center of the '
-                               'rolling circle.\nFor example; 5, 3, 5 is a '
-                               'valid input.\n>> ').split(",")))
+    return list(map(float, input('Please enter the radius of the fixed circle,'
+                                 ' the radius of the rolling circle and the '
+                                 'distance of the pen from the center of the '
+                                 'rolling circle.\nFor example; 5, 3, 5 is a '
+                                 'valid input.\n>> ').split(",")))
 
 
 def gcd(x, y):
@@ -118,10 +157,10 @@ def getNumberOfPoints(R, r, prec):  # R, r, prec > 0 (10%)
 
 
 def getPoints(R, r, d, prec):  # R, r, d, prec > 0 (20%)
-    """This function should return a list of pairs of floating point numbers.
-    The first number in each pair should be the x-coordinate of the next point
-    to draw, and the second number should be the y-coordinate of the next point
-    to draw.
+    """This function should return a list of pairs of floating point numbers
+    relating to a Hypotrochoid. The first number in each pair should be the
+    x-coordinate of the next point to draw, and the second number should be the
+    y-coordinate of the next point to draw.
     """
     points = []
     for t in range(prec):
@@ -131,17 +170,72 @@ def getPoints(R, r, d, prec):  # R, r, d, prec > 0 (20%)
     return points
 
 
+def get_points_epitrochoid(R, r, d, prec):
+    """This function should return a list of pairs of floating point numbers
+    relating to an Epitrochoid. The first number in each pair should be the
+    x-coordinate of the next point to draw, and the second number should be the
+    y-coordinate of the next point to draw.
+    """
+    points = []
+    for t in range(prec):
+        points.append([(R + r) * cos(t) - d * cos(((R + r) / r) * t),
+                       (R + r) * sin(t) - d * sin(((R + r) / r) * t)])
+    return points
+
+
 def draw(points):  # points is a list of pairs of floating point numbers (30%)
     """This function should display a window and draw the curve corresponding
     to the list of points. The window should stay visible until the user closes
     it. Marks will also be awarded for the presentation, so consider the
     background, colours and scaling of the picture.
     """
-    win = GraphWin('Spyrograph', 300, 300)
+    win = GraphWin('Spyrograph Display', 400, 400)
+    win.setBackground("#343434")
     for i in points:
-        p = Point((i[0] + 10) * 15, (i[1] + 10) * 15)
+        p = Point((i[0] + 14) * 15, (i[1] + 14) * 15)
+        p.setFill(color_rgb(randint(0, 255), randint(0, 255), randint(0, 255)))
         p.draw(win)
-    win.mainloop()
+    win.getMouse()
+    win.close()
+
+
+def gui_interface():
+    """This function provides a GUI via graphics.py for the user to enter
+    the required information for their Spyrograph.
+    """
+    gui = GraphWin("Spyrograph Menu", 400, 400)
+    gui.setCoords(0.0, 0.0, 10, 12)
+
+    Text(Point(5, 11), "Type: Epitrochoid or Hypotrochoid?").draw(gui)
+    type_graph = Entry(Point(5, 10), 12)
+    type_graph.draw(gui)
+
+    Text(Point(5, 9), "Radius of the outer circle?").draw(gui)
+    outer_circle_r_graph = Entry(Point(5, 8), 4)
+    outer_circle_r_graph.setText("0.0")
+    outer_circle_r_graph.draw(gui)
+
+    Text(Point(5, 7), "Radius of the inner circle?").draw(gui)
+    inner_circle_r_graph = Entry(Point(5, 6), 4)
+    inner_circle_r_graph.setText("0.0")
+    inner_circle_r_graph.draw(gui)
+
+    Text(Point(5, 5), "Distance value?").draw(gui)
+    distance_graph = Entry(Point(5, 4), 4)
+    distance_graph.setText("0.0")
+    distance_graph.draw(gui)
+
+    button = Text(Point(5, 2), "Display!")
+    button.draw(gui)
+    Rectangle(Point(3, 1), Point(7, 3)).draw(gui)
+
+    gui.getMouse()
+    button.setText("Displaying!")
+
+    return [str(type_graph.getText()),
+            eval(outer_circle_r_graph.getText()),
+            eval(inner_circle_r_graph.getText()),
+            eval(distance_graph.getText())]
 
 
 def main():  # (10%)
@@ -150,10 +244,24 @@ def main():  # (10%)
     give the user the option to continue or quit.
     """
     prec = 360
-    R, r, d = getInputs()
-    prec = getNumberOfPoints(R, r, prec)
-    points = getPoints(R, r, d, prec)
-    draw(points)
+    if get_input_method() == 'CLI':
+        graph_type = get_type()
+        R, r, d = getInputs()
+        prec = getNumberOfPoints(R, r, prec)
+        if graph_type == 'Epitrochoid':
+            points = get_points_epitrochoid(R, r, d, int(prec))
+        else:
+            points = getPoints(R, r, d, int(prec))
+        print("Click the graph to quit.")
+        draw(points)
 
+    else:
+        graph_type, R, r, d = gui_interface()
+        prec = getNumberOfPoints(R, r, prec)
+        if graph_type == 'Epitrochoid':
+            points = get_points_epitrochoid(R, r, d, int(prec))
+        else:
+            points = getPoints(R, r, d, int(prec))
+        draw(points)
 
 main()
