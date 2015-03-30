@@ -91,7 +91,8 @@ https://docs.python.org/dev/library/fractions.html#fractions.gcd
 from random import randint
 from math import *
 
-from graphics import GraphWin, Point, color_rgb, Text, Rectangle, Entry
+from graphics import GraphWin, Point, color_rgb, Text, Rectangle, Entry, Line
+
 
 
 # from fractions import gcd
@@ -188,12 +189,25 @@ def draw(points):  # points is a list of pairs of floating point numbers (30%)
     to the list of points. The window should stay visible until the user closes
     it. Marks will also be awarded for the presentation, so consider the
     background, colours and scaling of the picture.
-    """
+
     win = GraphWin('Spyrograph Display', 400, 400)
     win.setBackground("#343434")
-    for i in points:
+    for i in zip(points[1:], points):
         p = Point((i[0] + 14) * 15, (i[1] + 14) * 15)
         p.setFill(color_rgb(randint(0, 255), randint(0, 255), randint(0, 255)))
+        p.draw(win)
+    win.getMouse()
+    win.close()
+    """
+    win = GraphWin('Spyrograph Display', 500, 500)
+    win.setBackground("#343434")
+    Line(Point(250, 0), Point(250, 500)).draw(win)
+    Line(Point(0, 250), Point(500, 250)).draw(win)
+    for a, b in zip(points, points[1:]):
+        p = Line(Point((a[0] + 250) * 20, (a[1] + 250) * 20),
+                 Point((b[0] + 250) * 20, (b[1] + 250) * 20))
+        p.setFill(color_rgb(randint(0, 255), randint(0, 255), randint(0, 255)))
+        # p.setWidth(1)
         p.draw(win)
     win.getMouse()
     win.close()

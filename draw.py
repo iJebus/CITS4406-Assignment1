@@ -3,38 +3,44 @@ __author__ = 'Liam'
 # convert_gui.pyw
 # Program to convert Celsius to Fahrenheit using a simple
 # graphical interface.
+from random import randint
+from math import *
+
 from graphics import *
 
 
+def getPoints(R, r, d, prec):  # R, r, d, prec > 0 (20%)
+    """This function should return a list of pairs of floating point numbers
+    relating to a Hypotrochoid. The first number in each pair should be the
+    x-coordinate of the next point to draw, and the second number should be the
+    y-coordinate of the next point to draw.
+    """
+    points = []
+    for t in range(prec):
+        points.append([(R - r) * cos(t) + d * cos(((R - r) / r) * t),
+                       (R - r) * sin(t) - d * sin(((R - r) / r) * t)])
+    return points
+
+
 def main():
-    win = GraphWin("Spyrograph Menu", 400, 400)
-    win.setCoords(0.0, 0.0, 10, 12)
+    win = GraphWin('Spyrograph Display', 500, 500)
+    win.setBackground("#343434")
+    Line(Point(0, 250), Point(500, 250)).draw(win)  # x-axis
+    Line(Point(125, 200), Point(125, 300)).draw(win)  # -5 x-axis
+    Line(Point(375, 200), Point(375, 300)).draw(win)  # +5 x-axis
+    Line(Point(250, 0), Point(250, 500)).draw(win)  # y-axis
 
-    # Draw the interface
-    # Text(Point(1, 3), "Spyrograph").draw(win)
-    Text(Point(5, 11), "Type: Epitrochoid or Hypotrochoid?").draw(win)
-    type_graph = Entry(Point(5, 10), 12)
-    type_graph.draw(win)
-    Text(Point(5, 9), "Radius of the outer circle?").draw(win)
-    outer_circle_r_graph = Entry(Point(5, 8), 4)
-    outer_circle_r_graph.setText("0.0")
-    outer_circle_r_graph.draw(win)
-    Text(Point(5, 7), "Radius of the inner circle?").draw(win)
-    inner_circle_r_graph = Entry(Point(5, 6), 4)
-    inner_circle_r_graph.setText("0.0")
-    inner_circle_r_graph.draw(win)
-    Text(Point(5, 5), "Distance value?").draw(win)
-    distance_graph = Entry(Point(5, 4), 4)
-    distance_graph.setText("0.0")
-    distance_graph.draw(win)
-    button = Text(Point(5, 2), "Display!")
-    button.draw(win)
-    Rectangle(Point(3, 1), Point(7, 3)).draw(win)
-
-    # wait for a mouse click
+    points = getPoints(5, 3, 5, 1080)
+    for a, b in zip(points[1:], points):
+        p = Line(Point((a[0] + 15.625) * 16, (a[1] + 15.625) * 16),
+                 Point((b[0] + 15.625) * 16, (b[1] + 15.625) * 16))
+        p.setFill(color_rgb(randint(0, 255), randint(0, 255), randint(0, 255)))
+        # p.setFill("#FFF")
+        # p.setWidth(1)
+        p.draw(win)
+        # sleep(0.05)
     win.getMouse()
+    win.close()
 
-    graph = GraphWin("Spyrograph Graph", 400, 400)
-    Text(Point(1, 1), "NEW WINDOW!").draw(graph)
 
-    win.getMouse()
+main()
