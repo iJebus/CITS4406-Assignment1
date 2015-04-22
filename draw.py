@@ -17,8 +17,8 @@ def getPoints(R, r, d, prec):  # R, r, d, prec > 0 (20%)
     """
     points = []
     for t in range(prec):
-        points.append([(R - r) * cos(t) + d * cos(((R - r) / r) * t),
-                       (R - r) * sin(t) - d * sin(((R - r) / r) * t)])
+        points.append([(R + r) * cos(t) - d * cos(((R + r) / r) * t),
+                       (R + r) * sin(t) - d * sin(((R + r) / r) * t)])
     return points
 
 
@@ -26,19 +26,14 @@ def main():
     win = GraphWin('Spyrograph Display', 500, 500)
     win.setBackground("#343434")
     Line(Point(0, 250), Point(500, 250)).draw(win)  # x-axis
-    Line(Point(125, 200), Point(125, 300)).draw(win)  # -5 x-axis
-    Line(Point(375, 200), Point(375, 300)).draw(win)  # +5 x-axis
     Line(Point(250, 0), Point(250, 500)).draw(win)  # y-axis
 
     points = getPoints(5, 3, 5, 1080)
-    for a, b in zip(points[1:], points):
-        p = Line(Point((a[0] + 15.625) * 16, (a[1] + 15.625) * 16),
-                 Point((b[0] + 15.625) * 16, (b[1] + 15.625) * 16))
+    for i in points:
+        p = Point((i[0] + 15.625) * 16, (i[1] + 15.625) * 16)
         p.setFill(color_rgb(randint(0, 255), randint(0, 255), randint(0, 255)))
-        # p.setFill("#FFF")
-        # p.setWidth(1)
         p.draw(win)
-        # sleep(0.05)
+        time.sleep(0.001)
     win.getMouse()
     win.close()
 
