@@ -26,12 +26,16 @@ depending on whether an Epitrochoid or a Hypotrochoid is being displayed.
 We can then map out these points to create our image.
 
 Instructions:
+    Confirm that you would like to draw a Spyrograph.
+
     Select the interface type desired (CLI or GUI) and then enter desired
     values as prompted.
 
     Watch as your graph is displayed!
 
-    Click your graph to end the program.
+    Click your graph to close it.
+
+    Confirm if you would like to draw another Spyrograph, or end the program.
 
 References:
 http://en.wikipedia.org/wiki/Hypotrochoid
@@ -49,7 +53,9 @@ from graphics import GraphWin, Point, color_rgb, Text, Rectangle, Entry
 
 
 def get_input_method():
-    """This function prompts the user as to whether they want to use a GUI or
+    """Collects the input method the user desires.
+
+    This function prompts the user as to whether they want to use a GUI or
     the CLI. The function will loop until valid input is achieved. It uses the
     'loop and a half' method to allow users to correct invalid input.
     """
@@ -64,7 +70,9 @@ def get_input_method():
 
 
 def get_type():
-    """This function prompts the user as to whether they want to draw an
+    """Collects the graph type the user desires.
+
+    This function prompts the user as to whether they want to draw an
     Epitrochoid or a Hypotrochoid. The function will loop until valid input is
     achieved. Again, the 'loop and a half' method was used.
     """
@@ -80,7 +88,9 @@ def get_type():
 
 
 def getInputs():
-    """This function prompts the user for the values of the drawing parameters,
+    """Collects the inputs required for generating the graph points.
+
+    This function prompts the user for the values of the drawing parameters,
      and return these values to the calling program. Again, the 'loop and a
      half' method was used.
     """
@@ -99,25 +109,40 @@ def getInputs():
 
 
 def gcd(x, y):
-    """This function returns the greatest common denominator of x and y."""
+    """Return the greatest common denominator of x and y."""
     while y != 0:
         (x, y) = (y, x % y)
     return x
 
 
 def getNumberOfPoints(R, r, prec):
-    """This function calculates the number of points (x, y coordinates),
+    """Calculates the number of points in a complete pattern rotation.
+
+    This function calculates the number of points (x, y coordinates),
     assuming that every rotation of the rolling circle consists of
-    prec points. It makes use of the gcd function.
+    prec (precision) points. A higher prec value will return a higher detail
+    graph. This function makes use of the gcd function.
+
+    Keyword arguments:
+    R -- The radius of the fixed circle.
+    r -- The radius of the rotating circle.
+    prec -- The level of detail/precision in the graph. Default base of 360.
     """
     return prec * (r // gcd(R, r))
 
 
 def getPoints(R, r, d, prec):
-    """This function returns a list of pairs of floating point numbers
+    """Returns the x, y points of the graph.
+
+    This function returns a list of pairs of floating point numbers
     relating to a Hypotrochoid. The first number in each pair is the
     x-coordinate of the next point to draw, and the second number is the
     y-coordinate of the next point to draw.
+
+    Keyword arguments:
+    R -- The radius of the fixed circle.
+    r -- The radius of the rotating circle.
+    prec -- The level of detail/precision in the graph.
     """
     points = []
     for t in range(int(prec)):
@@ -127,10 +152,17 @@ def getPoints(R, r, d, prec):
 
 
 def get_points_epitrochoid(R, r, d, prec):
-    """This function returns a list of pairs of floating point numbers
+    """Returns the x, y points of the graph.
+
+    This function returns a list of pairs of floating point numbers
     relating to an Epitrochoid. The first number in each pair is the
     x-coordinate of the next point to draw, and the second number is the
     y-coordinate of the next point to draw.
+
+    Keyword arguments:
+    R -- The radius of the fixed circle.
+    r -- The radius of the rotating circle.
+    prec -- The level of detail/precision in the graph.
     """
     points = []
     for t in range(int(prec)):
@@ -140,9 +172,13 @@ def get_points_epitrochoid(R, r, d, prec):
 
 
 def draw(points):
-    """This function display a window and marks the points corresponding
-    to the list of points. The window is visible until the user closes
+    """
+    This function display a window and graphs the points corresponding
+    to points array provided. The window is visible until the user closes
     it.
+
+    Keyword arguments:
+    points -- The array of x, y point values to be graphed.
     """
     win = GraphWin('Spyrograph Display', 500, 500)
     win.setBackground("#343434")
@@ -156,8 +192,11 @@ def draw(points):
 
 
 def gui_interface():
-    """This function provides a GUI via graphics.py for the user to enter
-    the required information for their Spyrograph.
+    """Draws a GUI for input and returns that input.
+
+    This function provides a GUI via graphics.py for the user to enter
+    the required information for their Spyrograph. This data is then returned
+    so that the Spyrograph can be plotted in another window.
     """
     gui = GraphWin("Spyrograph Menu", 400, 400)
     gui.setCoords(0.0, 0.0, 10, 12)
@@ -194,10 +233,21 @@ def gui_interface():
             eval(distance_graph.getText())]
 
 
-def main():  # (10%)
-    """This function calls all the other functions and controls the flow
-    of the program. Once the user has drawn the picture, the program gives the
-    user the option to continue or quit.
+def main():
+    """The main runtime logic of the module.
+
+    This function calls all the other functions and controls the flow
+    of the module. It maintains a count of the number of graphs drawn, and
+    sets the default prec value (360).
+
+    Module Flow:
+    Confirm that you would like to draw a Spyrograph.
+    Select the interface type desired (CLI or GUI) and then enter desired
+    values as prompted.
+    Display the graph.
+    Close the graph on click.
+    Confirm if you would like to draw another Spyrograph, or end the program.
+
     """
     prec = 360
     count = 0
@@ -235,7 +285,5 @@ def main():  # (10%)
                 else:
                     points = getPoints(R, r, d, prec)
                 draw(points)
-
-
 
 main()
