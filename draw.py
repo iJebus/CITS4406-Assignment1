@@ -5,8 +5,15 @@ __author__ = 'Liam'
 # graphical interface.
 from random import randint
 from math import *
+from time import sleep
 
 from graphics import *
+
+
+def gcd(x, y):
+    while y != 0:
+        (x, y) = (y, x % y)
+    return x
 
 
 def getPoints(R, r, d, prec):  # R, r, d, prec > 0 (20%)
@@ -17,23 +24,40 @@ def getPoints(R, r, d, prec):  # R, r, d, prec > 0 (20%)
     """
     points = []
     for t in range(prec):
-        points.append([(R + r) * cos(t) - d * cos(((R + r) / r) * t),
-                       (R + r) * sin(t) - d * sin(((R + r) / r) * t)])
+        points.append([(R - r) * cos(t) + d * cos(((R - r) / r) * t),
+                       (R - r) * sin(t) - d * sin(((R - r) / r) * t)])
     return points
 
 
+def getNumberOfPoints(R, r, prec):
+    return prec * (r // gcd(R, r))
+
+
 def main():
+    R, r, d = 32, 10, 7
     win = GraphWin('Spyrograph Display', 500, 500)
     win.setBackground("#343434")
-    Line(Point(0, 250), Point(500, 250)).draw(win)  # x-axis
-    Line(Point(250, 0), Point(250, 500)).draw(win)  # y-axis
+    # Line(Point(0, 250), Point(500, 250)).draw(win)  # x-axis
+    # Line(Point(250, 0), Point(250, 500)).draw(win)  # y-axis
 
-    points = getPoints(5, 3, 5, 1080)
+    prec = getNumberOfPoints(R, r, 360)
+    points = getPoints(R, r, d, prec)
+
+    print(len(points))
+
+    x = [i for i, j in points]
+    y = [j for i, j in points]
+
+    win.setCoords(min(x) - 2, min(y) - 2, max(x) + 2, max(y) + 2)
+
     for i in points:
-        p = Point((i[0] + 15.625) * 16, (i[1] + 15.625) * 16)
+        p = Point(i[0], i[1])
         p.setFill(color_rgb(randint(0, 255), randint(0, 255), randint(0, 255)))
         p.draw(win)
-        time.sleep(0.001)
+        sleep(0.001)
+
+    # win.setCoords(mini[0], mini[1], maxi[0], maxi[1])
+
     win.getMouse()
     win.close()
 

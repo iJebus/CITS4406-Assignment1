@@ -172,18 +172,27 @@ def get_points_epitrochoid(R, r, d, prec):
 
 
 def draw(points):
-    """
+    """Draws the graph.
+
     This function display a window and graphs the points corresponding
     to points array provided. The window is visible until the user closes
-    it.
+    it. It uses sleep from the time module to provide a pleasing visual effect
+    as the points are drawn, and randomly colours each point for the same
+    reason.
 
     Keyword arguments:
     points -- The array of x, y point values to be graphed.
     """
     win = GraphWin('Spyrograph Display', 500, 500)
     win.setBackground("#343434")
+
+    x = [i for i, j in points]
+    y = [j for i, j in points]
+
+    win.setCoords(min(x) - 2, min(y) - 2, max(x) + 2, max(y) + 2)
+
     for i in points:
-        p = Point((i[0] + 15.625) * 16, (i[1] + 15.625) * 16)
+        p = Point(i[0], i[1])
         p.setFill(color_rgb(randint(0, 255), randint(0, 255), randint(0, 255)))
         p.draw(win)
         sleep(0.001)
@@ -275,7 +284,7 @@ def main():
                     points = get_points_epitrochoid(R, r, d, prec)
                 else:
                     points = getPoints(R, r, d, prec)
-                print("Click the graph to quit.")
+                print("Click the graph to continue.")
                 draw(points)
             else:
                 graph_type, R, r, d = gui_interface()
@@ -284,6 +293,7 @@ def main():
                     points = get_points_epitrochoid(R, r, d, prec)
                 else:
                     points = getPoints(R, r, d, prec)
+                print("Click the graph to continue.")
                 draw(points)
 
 main()
