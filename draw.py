@@ -34,7 +34,7 @@ def getNumberOfPoints(R, r, prec):
 
 
 def main():
-    R, r, d = 32, 10, 7
+    R, r, d = 1, 2, 7
     win = GraphWin('Spyrograph Display', 500, 500)
     win.setBackground("#343434")
     # Line(Point(0, 250), Point(500, 250)).draw(win)  # x-axis

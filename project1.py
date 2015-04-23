@@ -247,18 +247,20 @@ def main():
 
     This function calls all the other functions and controls the flow
     of the module. It maintains a count of the number of graphs drawn, and
-    sets the default prec value (360).
+    resets the default prec value (360) after each graph is drawn.
 
     Module Flow:
-    Confirm that you would like to draw a Spyrograph.
-    Select the interface type desired (CLI or GUI) and then enter desired
+    Set drawn 'count' to 0.
+    Confirm that you would like to draw a Spyrograph. Continue if yes, quit
+    otherwise.
+    Increment the drawn 'count' by 1 and set 'prec' value to 0.
+    Confirm the interface type desired (CLI or GUI) and then enter desired
     values as prompted.
     Display the graph.
     Close the graph on click.
     Confirm if you would like to draw another Spyrograph, or end the program.
 
     """
-    prec = 360
     count = 0
 
     while True:
@@ -275,6 +277,7 @@ def main():
             raise SystemExit
 
         if finished in ['YES', 'Y']:
+            prec = 360
             count += 1
             if get_input_method() == 'CLI':
                 graph_type = get_type()
