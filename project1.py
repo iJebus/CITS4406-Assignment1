@@ -132,7 +132,7 @@ def getNumberOfPoints(R, r, prec):
 
 
 def getPoints(R, r, d, prec):
-    """Returns the x, y points of the graph.
+    """Returns the x, y points of a Hypotrochoid.
 
     This function returns a list of pairs of floating point numbers
     relating to a Hypotrochoid. The first number in each pair is the
@@ -152,7 +152,7 @@ def getPoints(R, r, d, prec):
 
 
 def get_points_epitrochoid(R, r, d, prec):
-    """Returns the x, y points of the graph.
+    """Returns the x, y points of an Epitrochoid.
 
     This function returns a list of pairs of floating point numbers
     relating to an Epitrochoid. The first number in each pair is the
