@@ -1,5 +1,7 @@
 __author__ = 'Liam'
-"""Drawing testing"""
+"""Drawing testing. Mores specifically I used this as a scratch pad of 
+sorts to validate ideas before implementing into project1.py
+"""
 # convert_gui.pyw
 # Program to convert Celsius to Fahrenheit using a simple
 # graphical interface.
